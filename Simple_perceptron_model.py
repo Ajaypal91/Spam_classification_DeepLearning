@@ -9,8 +9,8 @@ def simple_perceptron_model():
     classifier = Sequential()
 
     # adding input layer and first hidden layer
-    classifier.add(Dense(output_dim=15, init="uniform", activation="relu", input_dim=38))
-    classifier.add(Dropout(p=0.1))
+    classifier.add(Dense(output_dim=20, init="uniform", activation="relu", input_dim=38))
+    classifier.add(Dropout(p=0.2))
 
     # adding output layer
     classifier.add(Dense(output_dim=1, init="uniform", activation="sigmoid"))
@@ -65,14 +65,16 @@ def get_acc_from_stratified_cross_val(X,Y,batch_size=100,nb_epochs=500):
     seed = 7
     # define 10-fold cross validation test harness
     kfold = StratifiedKFold(n_splits=10, shuffle=True, random_state=seed)
+    classifiers = []
     cvscores = []
     for train, test in kfold.split(X, Y):
         # create model
         classifier = simple_perceptron_model()
         # Fit the model
-        classifier.fit(X[train], Y[train], batch_size=batch_size, nb_epoch=nb_epochs)
+        classifier.fit(X[train], Y[train], batch_size=batch_size, nb_epoch=nb_epochs, verbose=0)
         # evaluate the model
         scores = classifier.evaluate(X[test], Y[test], verbose=0)
         print("%s: %.2f%%" % (classifier.metrics_names[1], scores[1] * 100))
         cvscores.append(scores[1] * 100)
-    return cvscores
+        classifiers .append(classifier)
+    return cvscores,classifiers

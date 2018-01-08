@@ -180,3 +180,7 @@ print 'ads'
 
 # print "entropy = " + str(-entropy)
 # cv2.waitKey(0)
+
+
+
+# 1203.png,1011,image001.png

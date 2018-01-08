@@ -124,9 +124,15 @@ class Extract_Features :
         g_numer = np.sum(np.power(g - g_mean,3)) / float(denom)
         b_numer = np.sum(np.power(b - b_mean,3)) / float(denom)
 
-        r_skew = r_numer / np.power(np.sqrt(r_var),3)
-        g_skew = g_numer / np.power(np.sqrt(g_var), 3)
-        b_skew = b_numer / np.power(np.sqrt(b_var), 3)
+        r_skew = 0
+        g_skew = 0
+        b_skew = 0
+        if r_numer != 0:
+            r_skew = r_numer / np.power(np.sqrt(r_var),3)
+        if g_numer != 0:
+            g_skew = g_numer / np.power(np.sqrt(g_var), 3)
+        if b_numer != 0:
+            b_skew = b_numer / np.power(np.sqrt(b_var), 3)
 
         return r_skew,g_skew,b_skew
 
@@ -142,9 +148,15 @@ class Extract_Features :
         g_numer = np.sum(np.power(g - g_mean, 4)) / float(denom)
         b_numer = np.sum(np.power(b - b_mean, 4)) / float(denom)
 
-        r_kurt = r_numer / np.power(np.sqrt(r_var), 4)
-        g_kurt = g_numer / np.power(np.sqrt(g_var), 4)
-        b_kurt = b_numer / np.power(np.sqrt(b_var), 4)
+        r_kurt = 0
+        g_kurt = 0
+        b_kurt = 0
+        if r_numer != 0:
+            r_kurt = r_numer / np.power(np.sqrt(r_var), 4)
+        if g_numer != 0:
+            g_kurt = g_numer / np.power(np.sqrt(g_var), 4)
+        if b_numer != 0:
+            b_kurt = b_numer / np.power(np.sqrt(b_var), 4)
 
         return r_kurt, g_kurt, b_kurt
 
