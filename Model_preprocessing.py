@@ -17,13 +17,14 @@ features_header = ['height','width','aspect_ratio','compression_ratio','file_siz
                    'lbp','entr_HOG','edges','avg_edge_len','snr','entr_noise']
 
 
-# spam_dataset_path = "Data/Image_Spam_Hunter/ImageHunter_Spam.csv"
+spam_dataset_path = "Data/Image_Spam_Hunter/ImageHunter_Spam.csv"
 # ham_dataset_path =  "Data/Image_Spam_Hunter/ImageSpamHunter_Ham.csv"
 
 # spam_dataset_path = "Data/Dredze/Dredze_Spam.csv"
 ham_dataset_path =  "Data/Image_Spam_Hunter/ImageSpamHunter_Ham.csv"
 
-spam_dataset_path = "Data/Improved_Spam.csv"
+# spam_dataset_path = "Data/Improved_Spam.csv"
+imporved_spam_path = "Data/Improved_Spam.csv"
 
 test_size_for_split = 0.2
 
@@ -37,18 +38,48 @@ def get_processed_dataset():
     # read dataset
     spam_dataset = read_dataset(spam_dataset_path, features_header)
     ham_dataset = read_dataset(ham_dataset_path, features_header)
+
+    # remove duplicates to remove the same image features in dataset
+    spam_dataset.drop_duplicates()
+    ham_dataset.drop_duplicates()
+
+    # add labels
+    spam_dataset["label"] = 1
+    ham_dataset["label"] = 0
+
+    # join all dataset
+    dataset = pd.concat([spam_dataset, ham_dataset])
+
+    # X, Y features
+    X = dataset.iloc[:, :38].values
+    Y = dataset.iloc[:, 38].values
+
+    # split the dataset
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=test_size_for_split, random_state=0)
+
+    # scale the features
+    sc = StandardScaler()
+    X_train = sc.fit_transform(X_train)
+    X_test = sc.transform(X_test)
+
+    return X_train,X_test,Y_train,Y_test
+
+def get_processed_improved_dataset():
+    # read dataset
+    spam_dataset = read_dataset(spam_dataset_path, features_header)
+    ham_dataset = read_dataset(ham_dataset_path, features_header)
     improved_spam_dataset = read_dataset(imporved_spam_path,features_header)
 
     # remove duplicates to remove the same image features in dataset
     spam_dataset.drop_duplicates()
     ham_dataset.drop_duplicates()
-    improved_spam_dataset.drop_duplicates()
-
+    improved_spam_dataset.drop_duplicates()    
+    
     # add labels
     spam_dataset["label"] = 1
     ham_dataset["label"] = 0
     improved_spam_dataset["label"] = 1
-
+    
     # join all dataset
     dataset = pd.concat([spam_dataset, ham_dataset])
 
@@ -68,34 +99,3 @@ def get_processed_dataset():
     Improved_spam_features = sc.transform(Improved_spam_features)
 
     return X_train,X_test,Y_train,Y_test,Improved_spam_features,Improved_spam_label
-
-def get_processed_improved_dataset():
-    # read dataset
-    spam_dataset = read_dataset(spam_dataset_path, features_header)
-    ham_dataset = read_dataset(ham_dataset_path, features_header)
-
-    # remove duplicates to remove the same image features in dataset
-    spam_dataset.drop_duplicates()
-    ham_dataset.drop_duplicates()
-
-    # add labels
-    spam_dataset["label"] = 1
-    ham_dataset["label"] = 0
-
-    # join all dataset
-    dataset = pd.concat([spam_dataset, ham_dataset])
-
-    # X, Y features
-    X = dataset.iloc[:, :38].values
-    Y = dataset.iloc[:, 38].values
-
-    # split the dataset
-    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=test_size_for_split, random_state=0)
-
-    # scale the features
-    sc = StandardScaler()
-    X_train = sc.fit_transform(X_train)
-    X_test = sc.transform(X_test)
-
-
-    return X_train,X_test,Y_train,Y_test

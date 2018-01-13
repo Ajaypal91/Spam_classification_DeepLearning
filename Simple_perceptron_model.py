@@ -71,10 +71,18 @@ def get_acc_from_stratified_cross_val(X,Y,batch_size=100,nb_epochs=500):
         # create model
         classifier = simple_perceptron_model()
         # Fit the model
-        classifier.fit(X[train], Y[train], batch_size=batch_size, nb_epoch=nb_epochs, verbose=0)
+        classifier.fit(X[train], Y[train], validation_split=(X[test], Y[test]), batch_size=batch_size, nb_epoch=nb_epochs)
+        # classifier.fit(X[train], Y[train], batch_size=batch_size, nb_epoch=nb_epochs, verbose=0)
         # evaluate the model
         scores = classifier.evaluate(X[test], Y[test], verbose=0)
         print("%s: %.2f%%" % (classifier.metrics_names[1], scores[1] * 100))
         cvscores.append(scores[1] * 100)
         classifiers .append(classifier)
     return cvscores,classifiers
+
+
+def cross_val_scores(X,Y,nb_epochs=500,batch_size=100):
+    classifier = KerasClassifier(build_fn=simple_perceptron_model,batch_size=batch_size,nb_epoch=nb_epochs)
+    kfold = StratifiedKFold(n_splits=10,shuffle=True, random_state=7)
+    accuracies = cross_val_score(estimator=classifier,X=X,y=Y,cv=kfold)
+    return accuracies

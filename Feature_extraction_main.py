@@ -8,8 +8,8 @@ reload(FE)
 
 # input_path = "Data/Image_Spam_Hunter/SpamImages"
 # output_path = "Data/Image_Spam_Hunter/ImageHunter_Spam.csv"
-input_path = "Data/Dredze/personal_image_ham"
-output_path = "Data/Dredze/Dredze.csv"
+input_path = "Data/Dredze/spam_archive_jmlr_1"
+output_path = "Data/Dredze/spam_archive_jmlr_1.csv"
 
 
 
